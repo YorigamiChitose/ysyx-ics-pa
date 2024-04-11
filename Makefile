@@ -1,5 +1,5 @@
-STUID = ysyx_22040000
-STUNAME = 张三
+STUID = ysyx_22050990
+STUNAME = YorigamiChitose
 
 # DO NOT modify the following code!!!
 
