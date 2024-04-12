@@ -177,7 +177,7 @@ config ITRACE_BSIZE
 config MTRACE
   depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
   bool "Enable memory tracer"
-  default y
+  default n
 
 config MTRACE_BSIZE
   depends on MTRACE
@@ -187,7 +187,7 @@ config MTRACE_BSIZE
 config FTRACE
   depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
   bool "Enable function tracer"
-  default y
+  default n
 
 config FTRACE_NSIZE
   depends on FTRACE
