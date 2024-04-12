@@ -29,8 +29,47 @@ enum {
 
 static uint8_t *sbuf = NULL;
 static uint32_t *audio_base = NULL;
+static bool audio_init_finish = false;
+static int audio_sbuf_flag = 0;
+
+static void audio_callback(void *userdata, uint8_t *stream, int len) {
+  int len_ctrl = len;
+  if(audio_base[reg_count] < len) {
+    len_ctrl = audio_base[reg_count];
+  }
+  if(len_ctrl + audio_sbuf_flag < CONFIG_SB_SIZE) {
+    memcpy(stream, sbuf + audio_sbuf_flag, len_ctrl);
+    audio_sbuf_flag += len_ctrl;
+  } else {
+    memcpy(stream, sbuf + audio_sbuf_flag, CONFIG_SB_SIZE - audio_sbuf_flag);
+    memcpy(stream + CONFIG_SB_SIZE - audio_sbuf_flag, sbuf, len_ctrl - (CONFIG_SB_SIZE - audio_sbuf_flag));
+    audio_sbuf_flag = len_ctrl - (CONFIG_SB_SIZE - audio_sbuf_flag);
+  }
+  audio_base[reg_count] -= len_ctrl;
+  if (len_ctrl < len) {
+    memset(stream + len_ctrl, 0, len - len_ctrl);
+  }
+}
+
+static void audio_init(void) {
+  SDL_AudioSpec s = {};
+  s.freq = audio_base[reg_freq];
+  s.channels = audio_base[reg_channels];
+  s.samples = audio_base[reg_samples];
+  s.callback = audio_callback;
+  s.userdata = NULL;
+  audio_base[reg_count] = 0;
+  audio_base[reg_sbuf_size] = CONFIG_SB_SIZE;
+  SDL_InitSubSystem(SDL_INIT_AUDIO);
+  SDL_OpenAudio(&s, NULL);
+  SDL_PauseAudio(0);
+}
 
 static void audio_io_handler(uint32_t offset, int len, bool is_write) {
+  if (audio_base[reg_init] && !audio_init_finish && is_write) {
+    audio_init_finish = true;
+    audio_init();
+  }
 }
 
 void init_audio() {
