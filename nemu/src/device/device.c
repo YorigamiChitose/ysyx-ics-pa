@@ -71,7 +71,6 @@ void sdl_clear_event_queue() {
   SDL_Event event;
   while (SDL_PollEvent(&event));
 #endif
-  SDL_Quit();
 }
 
 void init_device() {
