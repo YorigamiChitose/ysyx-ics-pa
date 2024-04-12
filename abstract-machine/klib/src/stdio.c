@@ -142,6 +142,9 @@ int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
             out = sput_str(out, va_arg(ap, char*));
             ++pfmt;
             break;
+          default:
+            ++pfmt;
+            continue;
         }
         break;
       default: out = sput_ch(out, *pfmt); break;
