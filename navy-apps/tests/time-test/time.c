@@ -9,6 +9,7 @@ int main() {
   uint64_t last_time = NDL_GetTicks();
   while (1) {
     uint64_t time_ms = NDL_GetTicks();
+    printf("%llu\n", time_ms);
     if(time_ms > last_time + 500) {
       last_time = time_ms;
       printf("FUCK!\n");

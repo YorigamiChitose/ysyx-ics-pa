@@ -46,9 +46,8 @@ void do_syscall(Context *c) {
   trace_syscall(a[0]);
 
   switch (a[0]) {
-    case -1: Log("yield"); break;
     case SYS_exit: halt(a[1]); break;
-    case SYS_yield: Log("yield"); break;
+    case SYS_yield: Log("SYS_yield"); break;
     case SYS_open: c->GPRx = fs_open((const char *)a[1], a[2], a[3]); break;
     case SYS_read: c->GPRx = fs_read(a[1], (void *)a[2], a[3]); break;
     case SYS_write: c->GPRx = fs_write(a[1], (const char *)a[2], a[3]); break;
