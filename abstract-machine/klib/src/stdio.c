@@ -111,37 +111,44 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
 int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
   const char *pfmt = fmt;
   char *out_head = out;
+  char flag = false;
   while(*pfmt) {
     if (out - out_head == n) {
       return n;
     }
     switch (*pfmt) {
       case '%': 
-        switch (*(pfmt + 1)) {
-          case 'c':
-            out = sput_ch(out, va_arg(ap, int));
-            ++pfmt;
-            break;
-          case 'p':
-            out = sput_uhexnum(out, va_arg(ap, unsigned int));
-            ++pfmt;
-            break;
-          case 'x':
-            out = sput_hexnum(out, va_arg(ap, int));
-            ++pfmt;
-            break;
-          case 'd': 
-            out = sput_decnum(out, va_arg(ap, int));
-            ++pfmt;
-            break;
-          case 'u':
-            out = sput_udecnum(out, va_arg(ap, unsigned int));
-            ++pfmt;
-            break;
-          case 's':
-            out = sput_str(out, va_arg(ap, char*));
-            ++pfmt;
-            break;
+        flag = true;
+        while (flag) {
+          switch (*(pfmt + 1)) {
+            case 'c':
+              out = sput_ch(out, va_arg(ap, int));
+              ++pfmt; flag = false;
+              break;
+            case 'p':
+              out = sput_uhexnum(out, va_arg(ap, unsigned int));
+              ++pfmt; flag = false;
+              break;
+            case 'x':
+              out = sput_hexnum(out, va_arg(ap, int));
+              ++pfmt; flag = false;
+              break;
+            case 'd': 
+              out = sput_decnum(out, va_arg(ap, int));
+              ++pfmt; flag = false;
+              break;
+            case 'u':
+              out = sput_udecnum(out, va_arg(ap, unsigned int));
+              ++pfmt; flag = false;
+              break;
+            case 's':
+              out = sput_str(out, va_arg(ap, char*));
+              ++pfmt; flag = false;
+              break;
+            default:
+              ++pfmt;
+              continue;
+          }
         }
         break;
       default: out = sput_ch(out, *pfmt); break;
