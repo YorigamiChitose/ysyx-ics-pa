@@ -184,7 +184,7 @@ static int cmd_trace(char *args) {
 }
 
 static int cmd_d(char *args) {
-#ifdef CONFIG_MTRACE
+#ifdef CONFIG_WATCH_POINT
   if (args == NULL) {
     printf("Error, please retry!\n");
     return 0;
@@ -211,7 +211,7 @@ static int cmd_d(char *args) {
 }
 
 static int cmd_w(char *args) {
-#ifdef CONFIG_MTRACE
+#ifdef CONFIG_WATCH_POINT
   if (args == NULL) {
     printf("Error, please retry!\n");
     return 0;
@@ -305,7 +305,7 @@ static int cmd_info(char *args) {
   if (strcmp(arg, "r") == 0) {
     isa_reg_display();
   } else if (strcmp(arg, "w") == 0) {
-  #ifdef CONFIG_MTRACE
+  #ifdef CONFIG_WATCH_POINT
     check_wp();
   #else
     printf("Watch point not enabled\n");
