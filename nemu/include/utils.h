@@ -18,6 +18,24 @@
 
 #include <common.h>
 
+// ----------- trace -----------
+
+#define PRINTFBUF_SIZE 128
+
+struct ItraceNode {
+  paddr_t pc;
+  uint32_t inst;
+  struct ItraceNode *next;
+};
+
+struct MtraceNode {
+  bool type;
+  uint8_t len;
+  word_t data;
+  vaddr_t addr;
+  struct MtraceNode *next;
+};
+
 // ----------- state -----------
 
 enum { NEMU_RUNNING, NEMU_STOP, NEMU_END, NEMU_ABORT, NEMU_QUIT };
