@@ -34,6 +34,28 @@ struct MtraceNode {
   struct MtraceNode *next;
 };
 
+struct FuncInfo {
+  char name[CONFIG_FTRACE_NSIZE];
+  paddr_t addr;
+  size_t size;
+};
+
+struct FtraceNode {
+  struct FuncInfo* dstFunc;
+  struct FuncInfo* srcFunc;
+  paddr_t pcAddr;
+  uint8_t type;
+  uint16_t callDepth;
+  struct FtraceNode *next;
+};
+
+struct AllFunc {
+  size_t num;
+  struct FuncInfo funcInfo[CONFIG_FTRACE_ISIZE];
+};
+
+extern struct AllFunc allFucn;
+
 // ----------- state -----------
 
 enum { NEMU_RUNNING, NEMU_STOP, NEMU_END, NEMU_ABORT, NEMU_QUIT };
