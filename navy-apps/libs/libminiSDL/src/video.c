@@ -4,15 +4,83 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define WINDOW_W 800
+#define WINDOW_H 600
+
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
+  SDL_Rect dst_r = { .x = 0, .y = 0, .w = dst->w, .h = dst->h }, 
+    src_r = { .x = 0, .y = 0, .w = src->w, .h = src->h };
+  if (srcrect) {
+    src_r = *srcrect;
+  }
+  if (dstrect) {
+    dst_r = *dstrect;
+  }
+  switch (dst->format->BitsPerPixel) {
+    case 32:
+      for (uint32_t i = 0; i < src_r.h; i ++) {
+        for (uint32_t j = 0; j < src_r.w; j ++) {
+          ((uint32_t *)dst->pixels)[(i + dst_r.y) * dst->w + j + dst_r.x] = 
+            ((uint32_t *)src->pixels)[(i + src_r.y) * src->w + j + src_r.x];
+        }
+      }
+      break;
+    case 8:
+      for (uint32_t i = 0; i < src_r.h; i ++) {
+        for (uint32_t j = 0; j < src_r.w; j ++) {
+          dst->pixels[(i + dst_r.y) * dst->w + j + dst_r.x] = 
+            src->pixels[(i + src_r.y) * src->w + j + src_r.x];
+        }
+      }
+      break;
+    default: break;
+  }
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
+  SDL_Rect dst_r = { .x = 0, .y = 0, .w = dst->w, .h = dst->h };
+  if (dstrect) {
+    dst_r = *dstrect;
+  }
+  switch (dst->format->BitsPerPixel) {
+    case 32:
+      for (int i = 0; i < dst_r.h; i ++) {
+        for (int j = 0; j < dst_r.w; j ++) {
+          ((uint32_t *)dst->pixels)[(i + dst_r.y) * dst->w + j + dst_r.x] = color;
+        }
+      }
+      break;
+    case 8:
+      for (int i = 0; i < dst_r.h; i ++) {
+        for (int j = 0; j < dst_r.w; j ++) {
+          dst->pixels[(i + dst_r.y) * dst->w + j + dst_r.x] = color;
+        }
+      }
+      break;
+    default: break;
+  }
 }
 
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
+  if (w == 0 || h == 0) {
+    w = s->w;
+    h = s->h;
+  }
+  uint32_t local_pixels[WINDOW_W * WINDOW_H];
+  switch (s->format->BitsPerPixel) {
+    case 32: NDL_DrawRect((uint32_t *)(s->pixels), x, y, w, h); break;
+    case 8: 
+      for (int i = 0; i < h; i ++) {
+        for (int j = 0; j < w; j ++) {
+          local_pixels[i * w + j] = s->format->palette->colors[s->pixels[(i + y) * s->w + j + x]].val;
+        }
+      }
+      NDL_DrawRect(local_pixels, x, y, w, h);
+      break;
+    default: break;
+  }
 }
 
 // APIs below are already implemented.
