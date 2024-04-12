@@ -18,7 +18,7 @@ void init_iringbuf(void) {
 }
 
 void display_iringbuf(void) {
-  char printBuf[CONFIG_ITRACE_BSIZE];
+  char printBuf[CONFIG_TRACE_PBSIZE];
   char* pPrintBuf = printBuf;
   struct ItraceNode *iringbufTemp = iringbufNow->next;
   for (int i = 0; i < CONFIG_ITRACE_BSIZE; i++) {

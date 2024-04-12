@@ -154,6 +154,11 @@ config TRACE_END
   int "When tracing is disabled (unit: number of instructions)"
   default 10000
 
+config TRACE_PBSIZE
+  depends on TRACE
+  hex "Print buffer size"
+  default 0xE0
+
 config ITRACE
   depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
   bool "Enable instruction tracer"
@@ -169,7 +174,15 @@ config ITRACE_BSIZE
   hex "Instruction tracer buffer size"
   default 0x10
 
+config MTRACE
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+  bool "Enable memory tracer"
+  default y
 
+config MTRACE_BSIZE
+  depends on MTRACE
+  hex "Instruction tracer buffer size"
+  default 0x10
 
 
 config DIFFTEST
