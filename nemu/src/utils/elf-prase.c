@@ -1,6 +1,8 @@
 #include <elf.h>
 #include <utils.h>
 
+#ifdef CONFIG_MTRACE
+
 #define Elf_Sym MUXDEF(CONFIG_RV64, Elf64_Sym, Elf32_Sym)
 #define Elf_Shdr MUXDEF(CONFIG_RV64, Elf64_Shdr, Elf32_Shdr)
 #define Elf_Ehdr MUXDEF(CONFIG_RV64, Elf64_Ehdr, Elf32_Ehdr)
@@ -137,3 +139,5 @@ void init_func_name(const char *elf_file) {
     Log("|%3d| %#010x|%8ld|%20s|", i, allFucn.funcInfo[i].addr,allFucn.funcInfo[i].size,allFucn.funcInfo[i].name);
   }
 }
+
+#endif

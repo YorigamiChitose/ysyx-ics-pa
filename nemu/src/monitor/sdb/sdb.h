@@ -18,20 +18,19 @@
 
 #include <common.h>
 
-#define NR_WP 32
-#define EXPR_SIZE 64
-
+#ifdef CONFIG_WITCH_POINT
 typedef struct watchpoint {
   int NO;
   struct watchpoint *next;
   word_t last_value;
   char expression[CONFIG_WP_EXPR_SIZE];
 } WP;
-
-word_t expr(char *e, bool *success);
 bool is_change(void);
 void check_wp(void);
 WP* new_wp(char* expression, bool* success);
 void free_wp(int NO, bool* success);
+#endif
+
+word_t expr(char *e, bool *success);
 
 #endif
