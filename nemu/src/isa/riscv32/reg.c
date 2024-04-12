@@ -24,8 +24,27 @@ const char *regs[] = {
 };
 
 void isa_reg_display() {
+  for (int i = 0; i < MUXDEF(CONFIG_RVE, 16, 32) / 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      printf("%-3s: " FMT_WORD "\t", reg_name(i*4+j), gpr(i*4+j));
+    }
+    printf("\n");
+  }
+  printf("%-7s: "   "%d"   "\n", "mod", cpu.mode);
+  printf("%-7s: " FMT_WORD "\n", "pc", cpu.pc);
+  printf("%-7s: " FMT_WORD "\n", "mepc", cpu.csr.mepc);
+  printf("%-7s: " FMT_WORD "\n", "mcause", cpu.csr.mcause);
+  printf("%-7s: " FMT_WORD "\n", "mstatus", cpu.csr.mstatus);
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
+  for (int i = 0; i < MUXDEF(CONFIG_RVE, 16, 32); i++) {
+    if (strcmp(s,regs[i]) == 0) {
+      (*success) = true;
+      return gpr(i);
+    }
+  }
+  (*success) = false;
+  printf("Reg name error, Please retry!\n");
   return 0;
 }
