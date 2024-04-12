@@ -18,6 +18,11 @@
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
 
+IFDEF(CONFIG_ITRACE, void push_inst(paddr_t pc, uint32_t inst));
+IFDEF(CONFIG_FTRACE, void trace_func_call(paddr_t pcAddr, paddr_t dstAddr));
+IFDEF(CONFIG_FTRACE, void trace_func_ret(paddr_t pcAddr, paddr_t dstAddr));
+IFDEF(CONFIG_FTRACE, void trace_func_end(void));
+
 #define R(i) gpr(i)
 #define Mr vaddr_read
 #define Mw vaddr_write
@@ -72,5 +77,6 @@ static int decode_exec(Decode *s) {
 
 int isa_exec_once(Decode *s) {
   s->isa.inst.val = inst_fetch(&s->snpc, 4);
+  IFDEF(CONFIG_ITRACE, push_inst(s->pc, s->isa.inst.val));
   return decode_exec(s);
 }
