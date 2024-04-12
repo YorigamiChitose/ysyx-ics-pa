@@ -21,7 +21,7 @@ extern const char *regs[];
 
 bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
   if (ref_r->pc != cpu.pc) {
-    Log("Different values of the PC! REF: " FMT_PADDR " DUT: " FMT_PADDR , ref_r->pc, cpu.pc);
+    Log("Different values of the PC! REF: " FMT_VADDR " DUT: " FMT_VADDR , ref_r->pc, cpu.pc);
     return false;
   }
   for (int i = 0; i < MUXDEF(CONFIG_RVE, 16, 32); i++) {
