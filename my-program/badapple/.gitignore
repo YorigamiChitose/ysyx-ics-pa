@@ -1,0 +1,4 @@
+!.gitignore
+!*.[cS]
+!*.mp4
+!Makefile
