@@ -181,9 +181,28 @@ config MTRACE
 
 config MTRACE_BSIZE
   depends on MTRACE
-  hex "Instruction tracer buffer size"
+  hex "Memory tracer buffer size"
   default 0x10
 
+config FTRACE
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+  bool "Enable function tracer"
+  default y
+
+config FTRACE_NSIZE
+  depends on FTRACE
+  hex "Function tracer name buffer size"
+  default 0x40
+
+config FTRACE_ISIZE
+  depends on FTRACE
+  hex "Function tracer info buffer size"
+  default 0xE0
+
+config FTRACE_BSIZE
+  depends on FTRACE
+  hex "Function tracer buffer size"
+  default 0xF0
 
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
