@@ -14,6 +14,7 @@
 ***************************************************************************************/
 
 #include "local-include/reg.h"
+#include "macro.h"
 #include <cpu/cpu.h>
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
@@ -161,9 +162,9 @@ static int decode_exec(Decode *s) {
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   // RV32M
   INSTPAT("0000001 ????? ????? 000 ????? 01100 11", mul    , R, R(rd) = src1 * src2);
-  INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh   , R, R(rd) = S64((SEXT(src1, 32) >> XLEN_H) * (SEXT(src2, 32) >> XLEN_H)));
-  INSTPAT("0000001 ????? ????? 011 ????? 01100 11", mulhu  , R, R(rd) = U64((U(src1) >> XLEN_H) * (U(src2) >> XLEN_H)));
-  INSTPAT("0000001 ????? ????? 010 ????? 01100 11", mulhsu , R, R(rd) = U64((SEXT(src1, 32) >> XLEN_H) * (U(src2) >> XLEN_H)));
+  INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh   , R, R(rd) = MUXDEF(CONFIG_RV64, S64((S(src1) >> XLEN_H) * (S(src2) >> XLEN_H)), (SEXT(src1, XLEN) * SEXT(src2, XLEN)) >> XLEN));
+  INSTPAT("0000001 ????? ????? 011 ????? 01100 11", mulhu  , R, R(rd) = MUXDEF(CONFIG_RV64, U64((U(src1) >> XLEN_H) * (U(src2) >> XLEN_H)), (SEXT(src1, XLEN) * U64(src2))        >> XLEN));
+  INSTPAT("0000001 ????? ????? 010 ????? 01100 11", mulhsu , R, R(rd) = MUXDEF(CONFIG_RV64, U64((S(src1) >> XLEN_H) * (U(src2) >> XLEN_H)), (U64(src1)        * U64(src2))        >> XLEN));
   INSTPAT("0000001 ????? ????? 100 ????? 01100 11", div    , R, R(rd) = S(src1) / S(src2));
   INSTPAT("0000001 ????? ????? 101 ????? 01100 11", divu   , R, R(rd) = src1 / src2);
   INSTPAT("0000001 ????? ????? 110 ????? 01100 11", rem    , R, R(rd) = S(src1) % S(src2));
