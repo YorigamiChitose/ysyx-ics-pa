@@ -18,7 +18,7 @@
 
 #include <common.h>
 
-#ifdef CONFIG_WITCH_POINT
+#ifdef CONFIG_WATCH_POINT
 typedef struct watchpoint {
   int NO;
   struct watchpoint *next;
