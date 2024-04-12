@@ -163,7 +163,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   // RV32M
   INSTPAT("0000001 ????? ????? 000 ????? 01100 11", mul    , R, R(rd) = src1 * src2);
-  INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh   , R, R(rd) = MUXDEF(CONFIG_RV64, S64((S(src1) >> XLEN_H) * (S(src2) >> XLEN_H)), S64(S64(src1) * S64(src2)) >> XLEN); printf("%lx\n", S64(src1) * S64(src1)));
+  INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh   , R, R(rd) = MUXDEF(CONFIG_RV64, S64((S(src1) >> XLEN_H) * (S(src2) >> XLEN_H)), S64(S64(src1) * S64(src2)) >> XLEN); printf("%lx\n", U64(src1) * U64(src1)));
   INSTPAT("0000001 ????? ????? 011 ????? 01100 11", mulhu  , R, R(rd) = MUXDEF(CONFIG_RV64, U64((U(src1) >> XLEN_H) * (U(src2) >> XLEN_H)), S64(U64(src1) * U64(src2)) >> XLEN));
   INSTPAT("0000001 ????? ????? 010 ????? 01100 11", mulhsu , R, R(rd) = MUXDEF(CONFIG_RV64, U64((S(src1) >> XLEN_H) * (U(src2) >> XLEN_H)), U64(S64(src1) * U64(src2)) >> XLEN));
   INSTPAT("0000001 ????? ????? 100 ????? 01100 11", div    , R, R(rd) = S(src1) / S(src2));
