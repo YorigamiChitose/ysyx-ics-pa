@@ -20,8 +20,6 @@
 
 // ----------- trace -----------
 
-#define PRINTFBUF_SIZE 128
-
 struct ItraceNode {
   paddr_t pc;
   uint32_t inst;

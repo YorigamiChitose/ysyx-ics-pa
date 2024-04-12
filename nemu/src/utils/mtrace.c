@@ -22,7 +22,7 @@ void init_mringbuf(void) {
 }
 
 void display_mringbuf(void) {
-  char printBuf[PRINTFBUF_SIZE];
+  char printBuf[CONFIG_TRACE_PBSIZE];
   char* pPrintBuf = printBuf;
   struct MtraceNode *mringbufTemp = mringbufNow->next;
   for (int i = 0; i < CONFIG_MTRACE_BSIZE; i++) {
