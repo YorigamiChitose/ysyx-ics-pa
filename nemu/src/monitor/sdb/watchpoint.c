@@ -15,6 +15,7 @@
 
 #include "sdb.h"
 
+#ifdef CONFIG_WATCH_POINT
 static WP wp_pool[CONFIG_WP_SIZE] = {};
 static WP *head = NULL, *free_ = NULL;
 
@@ -123,3 +124,4 @@ bool is_change(void) {
   }
   return changed;
 }
+#endif
