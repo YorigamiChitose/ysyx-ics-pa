@@ -164,6 +164,13 @@ config ITRACE_COND
   string "Only trace instructions when the condition is true"
   default "true"
 
+config ITRACE_BSIZE
+  depends on ITRACE
+  hex "Instruction tracer buffer size"
+  default 0x10
+
+
+
 
 config DIFFTEST
   depends on TARGET_NATIVE_ELF

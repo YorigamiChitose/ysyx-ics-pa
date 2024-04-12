@@ -18,6 +18,14 @@
 
 #include <common.h>
 
+// ----------- trace -----------
+
+struct ItraceNode {
+  paddr_t pc;
+  uint32_t inst;
+  struct ItraceNode *next;
+};
+
 // ----------- state -----------
 
 enum { NEMU_RUNNING, NEMU_STOP, NEMU_END, NEMU_ABORT, NEMU_QUIT };
