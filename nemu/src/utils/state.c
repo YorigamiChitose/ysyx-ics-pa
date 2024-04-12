@@ -16,9 +16,9 @@
 #include <utils.h>
 #include <SDL2/SDL.h>
 NEMUState nemu_state = { .state = NEMU_STOP };
-
+void close_screen(void);
 int is_exit_status_bad() {
-  SDL_Quit();
+  close_screen();
   int good = (nemu_state.state == NEMU_END && nemu_state.halt_ret == 0) ||
     (nemu_state.state == NEMU_QUIT);
   return !good;
