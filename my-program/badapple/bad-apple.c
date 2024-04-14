@@ -43,7 +43,7 @@ int main() {
   for (; f < fend; f ++) {
     for (int y = 0; y < VIDEO_ROW; y++) {
       for (int x = 0; x < VIDEO_COL; x++) {
-        uint8_t p = getbit(f->pixel, y * VIDEO_COL + x);
+        uint32_t p = getbit(f->pixel, y * VIDEO_COL + x);
         image[y][x] = p;
       }
       printf("%x\n", image[y][0]);
