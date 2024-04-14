@@ -4,20 +4,20 @@
 
 uint32_t image[300][400];
 typedef struct {
-  uint8_t pixel[VIDEO_ROW * VIDEO_COL / 8];
+  uint32_t pixel[VIDEO_ROW * VIDEO_COL];
 } frame_t;
 
 static void sleep_until(uint64_t next) {
   while (io_read(AM_TIMER_UPTIME).us < next) ;
 }
 
-static uint8_t getbit(uint8_t *p, int idx) {
-  int byte_idx = idx / 8;
-  int bit_idx = idx % 8;
-  bit_idx = 7 - bit_idx;
-  uint8_t byte = p[byte_idx];
-  uint8_t bit = (byte >> bit_idx) & 1;
-  return bit;
+static uint32_t getbit(uint32_t *p, int idx) {
+  // int byte_idx = idx / 8;
+  // int bit_idx = idx % 8;
+  // bit_idx = 7 - bit_idx;
+  // uint8_t byte = p[byte_idx];
+  // uint8_t bit = (byte >> bit_idx) & 1;
+  return p[idx];
 }
 
 int main() {
@@ -44,7 +44,7 @@ int main() {
     for (int y = 0; y < VIDEO_ROW; y++) {
       for (int x = 0; x < VIDEO_COL; x++) {
         uint8_t p = getbit(f->pixel, y * VIDEO_COL + x);
-        image[y][x] = p ? 0x00000000 : 0x00FFFFFF;
+        image[y][x] = p;
       }
       io_write(AM_GPU_FBDRAW, (400 - VIDEO_COL) / 2, (300 - VIDEO_ROW) / 2 + y, &image[y][0], VIDEO_COL, 1, true);
       io_write(AM_GPU_FBDRAW, 0, 0, NULL, 0, 0, false);
