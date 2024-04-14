@@ -16,7 +16,7 @@ CFLAGS  += -DVIDEO_ROW=$(VIDEO_ROW) -DVIDEO_COL=$(VIDEO_COL) -DVIDEO_FPS=$(VIDEO
            -DAUDIO_FREQ=$(AUDIO_FREQ) -DAUDIO_CHANNEL=$(AUDIO_CHANNEL)
 ASFLAGS += -DVIDEO_FILE=\"$(abspath $(VIDEO))\" -DAUDIO_FILE=\"$(abspath $(AUDIO))\"
 $(VIDEO):
-	ffmpeg -i $(VIDEO_SRC) -r $(VIDEO_FPS) -f image2pipe -s $(VIDEO_COL)x$(VIDEO_ROW) -vcodec rawvideo -pix_fmt abgr $@
+	ffmpeg -i $(VIDEO_SRC) -r $(VIDEO_FPS) -f image2pipe -s $(VIDEO_COL)x$(VIDEO_ROW) -vcodec rawvideo -pix_fmt rgba $@
 
 $(AUDIO):
 	ffmpeg -i $(VIDEO_SRC) -vn -acodec pcm_s16le -f s16le -ac $(AUDIO_CHANNEL) -ar $(AUDIO_FREQ) $@
