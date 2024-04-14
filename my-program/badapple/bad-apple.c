@@ -46,7 +46,6 @@ int main() {
         uint32_t p = getbit(f->pixel, y * VIDEO_COL + x);
         image[y][x] = p;
       }
-      printf("%x\n", image[y][0]);
       io_write(AM_GPU_FBDRAW, (400 - VIDEO_COL) / 2, (300 - VIDEO_ROW) / 2 + y, &image[y][0], VIDEO_COL, 1, true);
       io_write(AM_GPU_FBDRAW, 0, 0, NULL, 0, 0, false);
     }
