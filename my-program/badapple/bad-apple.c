@@ -21,7 +21,7 @@ static uint32_t getbit(uint32_t *p, int idx) {
 }
 
 int main() {
-  extern uint8_t video_payload, video_payload_end;
+  extern uint32_t video_payload, video_payload_end;
   extern uint8_t audio_payload, audio_payload_end;
   int audio_len = 0, audio_left = 0;
   Area sbuf;
