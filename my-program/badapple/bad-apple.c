@@ -41,13 +41,13 @@ int main() {
   
   uint64_t now = io_read(AM_TIMER_UPTIME).us;
   for (; f < fend; f ++) {
-    printf("\033[0;0H");  // reset cursor
     for (int y = 0; y < VIDEO_ROW; y++) {
       for (int x = 0; x < VIDEO_COL; x++) {
         uint8_t p = getbit(f->pixel, y * VIDEO_COL + x);
         image[y][x] = p ? 0x00000000 : 0x00FFFFFF;
       }
       io_write(AM_GPU_FBDRAW, (400 - VIDEO_COL) / 2, (300 - VIDEO_ROW) / 2 + y, &image[y][0], VIDEO_COL, 1, true);
+      io_write(AM_GPU_FBDRAW, 0, 0, NULL, 0, 0, false);
     }
 
     if (has_audio) {
