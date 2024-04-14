@@ -128,7 +128,7 @@ menu "Testing and Debugging"
 
 config WATCH_POINT
   bool "Enable watch point"
-  default y
+  default n
 
 config WP_SIZE
   depends on WATCH_POINT
