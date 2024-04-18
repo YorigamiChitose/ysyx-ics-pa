@@ -1,7 +1,10 @@
 #include <common.h>
 #include <fs.h>
 #include <sys/time.h>
+#include <proc.h>
 #include "syscall.h"
+
+void naive_uload(PCB *pcb, const char *filename);
 
 void trace_syscall(uintptr_t code) {
   switch (code) {
@@ -54,6 +57,7 @@ void do_syscall(Context *c) {
     case SYS_close: c->GPRx = fs_close(a[1]); break;
     case SYS_lseek: c->GPRx = fs_lseek(a[1], a[2], a[3]); break;
     case SYS_brk: c->GPRx = mybrk(a[1]); break;
+    case SYS_execve: naive_uload(NULL, (const char *)a[1]); break;
     case SYS_gettimeofday: c->GPRx = mygettimeofday((struct timeval *)a[1], (struct timezone *)a[2]); break;
     default: panic("Unhandled syscall ID = %d", a[0]); break;
   }
