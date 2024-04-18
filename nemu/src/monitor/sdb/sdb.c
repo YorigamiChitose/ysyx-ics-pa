@@ -29,6 +29,7 @@ void init_wp_pool();
 IFDEF(CONFIG_ITRACE, void display_iringbuf(void));
 IFDEF(CONFIG_MTRACE, void display_mringbuf(void));
 IFDEF(CONFIG_FTRACE, void display_call(void));
+IFDEF(CONFIG_DIFFTEST, void reinit_difftest(void));
 
 #define LIST_NUM 3
 #define add_cnt(x) (x % LIST_NUM ? 1 : 0)
@@ -68,8 +69,8 @@ static int cmd_p(char *args);
 static int cmd_w(char *args);
 static int cmd_d(char *args);
 static int cmd_trace(char *args);
-// static int cmd_detach(char *args);
-// static int cmd_attach(char *args);
+static int cmd_detach(char *args);
+static int cmd_attach(char *args);
 
 static struct {
   const char *name;
@@ -86,8 +87,8 @@ static struct {
   {"w",      "Usage: w\t[str]\t\t - Set a new watchpoint.", cmd_w},
   {"d",      "Usage: d\t[int]\t\t - Delete a watchpoint.", cmd_d},
   {"trace",  "Usage: trace\t[str]\t\t - Check the inst.", cmd_trace},
-  // {"detach", "Usage: detach\t\t\t - Disable difftest.", cmd_detach},
-  // {"attach", "Usage: attach\t\t\t - Enable difftest.", cmd_attach},
+  {"detach", "Usage: detach\t\t\t - Disable difftest.", cmd_detach},
+  {"attach", "Usage: attach\t\t\t - Enable difftest.", cmd_attach},
 
   /* TODO: Add more commands */
 
@@ -311,6 +312,21 @@ static int cmd_info(char *args) {
     printf("Watch point not enabled\n");
   #endif
   }
+  return 0;
+}
+
+extern bool enable_difftest;
+
+static int cmd_detach(char *args) {
+  printf("Disable difftest success\n");
+  IFDEF(CONFIG_DIFFTEST, enable_difftest = false);
+  return 0;
+}
+
+static int cmd_attach(char *args) {
+  IFDEF(CONFIG_DIFFTEST, reinit_difftest());
+  printf("Enable difftest success\n");
+  IFDEF(CONFIG_DIFFTEST, enable_difftest = true);
   return 0;
 }
 
