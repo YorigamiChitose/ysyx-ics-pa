@@ -1,11 +1,9 @@
-// import Mill dependency
 import mill._
 import mill.define.Sources
 import mill.modules.Util
 import mill.scalalib.scalafmt.ScalafmtModule
 import mill.scalalib.TestModule.ScalaTest
 import mill.scalalib._
-// support BSP
 import mill.bsp._
 
 object playground extends SbtModule with ScalafmtModule { m =>
@@ -23,15 +21,15 @@ object playground extends SbtModule with ScalafmtModule { m =>
   }
   override def ivyDeps = Agg(
     if (useChisel3) ivy"edu.berkeley.cs::chisel3:3.6.0" else
-    ivy"org.chipsalliance::chisel:7.0.0-M1"
+    ivy"org.chipsalliance::chisel:6.3.0"
   )
   override def scalacPluginIvyDeps = Agg(
     if (useChisel3) ivy"edu.berkeley.cs:::chisel3-plugin:3.6.0" else
-    ivy"org.chipsalliance:::chisel-plugin:7.0.0-M1"
+    ivy"org.chipsalliance:::chisel-plugin:6.3.0"
   )
   object test extends SbtModuleTests with TestModule.ScalaTest with ScalafmtModule {
     override def sources = T.sources {
-      super.sources() ++ Seq(PathRef(millSourcePath / "test"))
+      super.sources() ++ Seq(PathRef(this.millSourcePath / "test"))
     }
     override def ivyDeps = super.ivyDeps() ++ Agg(
       if (useChisel3) ivy"edu.berkeley.cs::chiseltest:0.6.0" else
@@ -39,6 +37,7 @@ object playground extends SbtModule with ScalafmtModule { m =>
     )
   }
   def repositoriesTask = T.task { Seq(
+    coursier.MavenRepository("https://maven.aliyun.com/repository/public"),
     coursier.MavenRepository("https://repo.scala-sbt.org/scalasbt/maven-releases"),
     coursier.MavenRepository("https://oss.sonatype.org/content/repositories/releases"),
     coursier.MavenRepository("https://oss.sonatype.org/content/repositories/snapshots"),
