@@ -1,13 +1,18 @@
 #include <am.h>
 #include <nemu.h>
 
+static uint64_t boot_time = 0;
+
 void __am_timer_init() {
+  uint32_t high = inl(RTC_ADDR+4);
+  uint32_t low = inl(RTC_ADDR);
+  boot_time = (uint64_t)low + (((uint64_t)high) << 32);
 }
 
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) {
   uint32_t high = inl(RTC_ADDR+4);
   uint32_t low = inl(RTC_ADDR);
-  uptime->us = (uint64_t)low + (((uint64_t)high) << 32);
+  uptime->us = (uint64_t)low + (((uint64_t)high) << 32) - boot_time;
 }
 
 int is_leap_year(int year) {
@@ -26,7 +31,7 @@ void __am_timer_rtc(AM_TIMER_RTC_T *rtc) {
   uint32_t high         = inl(RTC_ADDR+4);
   uint32_t low          = inl(RTC_ADDR);
   uint64_t total_second = ((uint64_t)low + (((uint64_t)high) << 32)) / 1000000;
-
+  total_second += 8 * 3600; // Asia/Shanghai UTC+8
   uint32_t days          = total_second / 86400;
   uint32_t second_in_day = total_second % 86400;
 
