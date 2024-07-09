@@ -1,3 +1,4 @@
+#include "am.h"
 #include <proc.h>
 
 #define MAX_NR_PROC 4
@@ -7,6 +8,11 @@ static PCB pcb_boot = {};
 void naive_uload(PCB *pcb, const char *filename);
 PCB *current = NULL;
 
+void context_kload(PCB *pcb, void (*entry)(void*), int code) {
+  Area kstack = {&(pcb->stack[0]), &(pcb->stack[STACK_SIZE - 1])};
+  pcb->cp = kcontext(kstack, entry, (void *)code);
+}
+
 void switch_boot_pcb() {
   current = &pcb_boot;
 }
@@ -14,13 +20,17 @@ void switch_boot_pcb() {
 void hello_fun(void *arg) {
   int j = 1;
   while (1) {
-    Log("Hello World from Nanos-lite with arg '%p' for the %dth time!", (uintptr_t)arg, j);
+    Log("Hello World from Nanos-lite with arg '%d' for the %dth time!", arg, j);
     j ++;
     yield();
   }
 }
 
 void init_proc() {
+  context_kload(&pcb[0], hello_fun, 0);
+  context_kload(&pcb[1], hello_fun, 1);
+  context_kload(&pcb[2], hello_fun, 2);
+  context_kload(&pcb[3], hello_fun, 3);
   switch_boot_pcb();
 
   Log("Initializing processes...");
@@ -33,7 +43,7 @@ void init_proc() {
   // naive_uload(NULL, "/bin/event-test");
   // naive_uload(NULL, "/bin/bmp-test");
   // naive_uload(NULL, "/bin/nslider");
-  naive_uload(NULL, "/bin/menu");
+  // naive_uload(NULL, "/bin/menu");
   // naive_uload(NULL, "/bin/nterm");
   // naive_uload(NULL, "/bin/bird");
   // naive_uload(NULL, "/bin/pal");
@@ -44,5 +54,11 @@ void init_proc() {
 }
 
 Context* schedule(Context *prev) {
-  return NULL;
+  current->cp = prev;
+  if (current == &pcb_boot) {
+    current = &pcb[0];
+    return current->cp;
+  }
+  current = (&pcb[0] + ((current - &pcb[0] + 1) % 4));
+  return current->cp;
 }

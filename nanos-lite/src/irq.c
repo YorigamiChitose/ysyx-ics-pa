@@ -1,10 +1,13 @@
 #include <common.h>
-
+#include <proc.h>
 void do_syscall(Context *c);
+
+Context* schedule(Context *prev);
+extern PCB *current;
 
 static Context* do_event(Event e, Context* c) {
   switch (e.event) {
-    case EVENT_YIELD: Log("EVENT_YIELD"); break;
+    case EVENT_YIELD: c = schedule(c); break;//Log("EVENT_YIELD");
     case EVENT_SYSCALL: do_syscall(c); break;
     default: panic("Unhandled event ID = %d", e.event);
   }
