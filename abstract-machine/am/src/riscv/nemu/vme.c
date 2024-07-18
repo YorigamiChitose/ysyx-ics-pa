@@ -70,5 +70,13 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 }
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
-  return NULL;
+  Context *context = kstack.end - sizeof(Context);
+  #ifdef __ISA_RISCV64__
+    context->mstatus = 0xa00001800;
+  #else
+    context->mstatus = 0x1800;
+  #endif
+  context->mepc = (uintptr_t)entry;
+  context->pdir = NULL;
+  return context;
 }
