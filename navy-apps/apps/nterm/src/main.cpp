@@ -6,14 +6,16 @@ static const char *font_fname = "/share/fonts/Courier-7.bdf";
 static BDF_Font *font = NULL;
 static SDL_Surface *screen = NULL;
 Terminal *term = NULL;
+char ** global_envp = NULL;
 
 void builtin_sh_run();
 void extern_app_run(const char *app_path);
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[], char *envp[]) {
   SDL_Init(0);
   font = new BDF_Font(font_fname);
 
+  global_envp = envp;
   // setup display
   int win_w = font->w * W;
   int win_h = font->h * H;
@@ -30,7 +32,7 @@ int main(int argc, char *argv[]) {
 
 static void draw_ch(int x, int y, char ch, uint32_t fg, uint32_t bg) {
   SDL_Surface *s = BDF_CreateSurface(font, ch, fg, bg);
-  SDL_Rect dstrect = { .x = x, .y = y };
+  SDL_Rect dstrect = { .x = (int16_t)x, .y = (int16_t)y };
   SDL_BlitSurface(s, NULL, screen, &dstrect);
   SDL_FreeSurface(s);
 }

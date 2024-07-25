@@ -28,33 +28,14 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
-  char *const argv[] = {"/bin/pal", "--skip", "test", 0};
-  char *const envp[] = {"HOME=/home", "PATH=/bin", 0};
+  char *const argv[] = {"/bin/nterm", 0};
+  char *const envp[] = {"PATH=/bin/;/usr/bin/"};
   // context_kload(&pcb[0], hello_fun, 0);
-  context_uload(&pcb[1], "/bin/pal", argv, envp);
-  // context_kload(&pcb[1], hello_fun, 1);
-  // context_kload(&pcb[2], hello_fun, 2);
-  // context_kload(&pcb[3], hello_fun, 3);
+  context_uload(&pcb[0], "/bin/nterm", argv, envp);
+
   switch_boot_pcb();
 
   Log("Initializing processes...");
-
-  // load program here
-  // naive_uload(NULL, "/bin/dummy");
-  // naive_uload(NULL, "/bin/hello");
-  // naive_uload(NULL, "/bin/time-test");
-  // naive_uload(NULL, "/bin/file-test");
-  // naive_uload(NULL, "/bin/event-test");
-  // naive_uload(NULL, "/bin/bmp-test");
-  // naive_uload(NULL, "/bin/nslider");
-  // naive_uload(NULL, "/bin/menu");
-  // naive_uload(NULL, "/bin/nterm");
-  // naive_uload(NULL, "/bin/bird");
-  // naive_uload(NULL, "/bin/pal");
-  // naive_uload(NULL, "/bin/coremark");
-  // naive_uload(NULL, "/bin/dhrystone");
-  // naive_uload(NULL, "/bin/typing-game");
-  // naive_uload(NULL, "/bin/fceux");
 }
 
 Context* schedule(Context *prev) {

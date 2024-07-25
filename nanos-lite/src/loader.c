@@ -1,3 +1,4 @@
+#include "memory.h"
 #include "sys/types.h"
 #include <proc.h>
 #include <elf.h>
@@ -54,7 +55,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   for (uint i = 0; i < envc; i ++) {
     str_area_size += strlen(envp[i]) + 1;
   }
-  uintptr_t *str_pointer = (uintptr_t *)(((uintptr_t)heap.end - str_area_size) & ~(sizeof(uintptr_t) - 1));
+  uintptr_t *str_pointer = (uintptr_t *)(((uintptr_t)new_page(1) - str_area_size) & ~(sizeof(uintptr_t) - 1));
   uintptr_t *arr_pointer = str_pointer - (1 + 1 * 2 + argc + envc);
   arr_pointer[0] = (uintptr_t)argc;
   for (uint i = 0; i < argc; i ++) {
